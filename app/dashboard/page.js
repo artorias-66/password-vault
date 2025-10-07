@@ -223,7 +223,7 @@ export default function DashboardPage() {
                 <div className="text-sm text-gray-500 truncate">{item.usernamePlain}</div>
               </div>
               <div className="space-x-2">
-                <button onClick={() => copyToClipboard(item.passwordPlain)} className="px-2 py-1 bg-gray-200 rounded">Copy</button>
+                <button onClick={() => copyToClipboard(item.passwordPlain)} className="px-2 py-1 rounded" style={{ backgroundColor: "transparent", borderColor: "var(--border)", borderWidth: 1, color: "var(--foreground)" }}>Copy</button>
                 <button onClick={() => { setEditingId(item._id); setTitle(item.titlePlain || ""); setUsername(item.usernamePlain || ""); setPassword(item.passwordPlain || ""); setUrl(item.urlPlain || ""); setNotes(item.notesPlain || ""); }} className="px-2 py-1 bg-yellow-500 text-white rounded">Edit</button>
                 <button onClick={() => deleteItem(item._id)} className="px-2 py-1 bg-red-500 text-white rounded">Delete</button>
               </div>
