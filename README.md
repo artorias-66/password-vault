@@ -25,19 +25,12 @@ npm run dev
 # open http://localhost:3000
 ```
 
-Flow to try:
-- Sign up → Log in
-- Generate a password (length, numbers/symbols, exclude look‑alikes) → Save
-- Search, Edit, Delete; Copy auto‑clears in ~15s
-
 ### Tech choices
 - Next.js App Router, Tailwind (light/dark theme, no heavy UI kits)
 - MongoDB with Mongoose
 - Auth: email + password (bcrypt) → JWT (localStorage)
 - Crypto: client‑side AES (CryptoJS)
 
-Short note on crypto (2–3 lines):
-We use CryptoJS AES in the browser so plaintext never leaves the client. It’s lightweight, works without native bindings, and is sufficient for this MVP. For production hardening, switch to WebCrypto AES‑GCM with per‑item random IVs and derive keys per user (PBKDF2/Argon2).
 
 ### API surface
 - POST `/api/auth/signup` → create user
