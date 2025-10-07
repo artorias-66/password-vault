@@ -198,7 +198,7 @@ export default function DashboardPage() {
         {editingId ? (
           <div className="flex gap-2">
             <button onClick={updateVaultItem} className="px-4 py-2 bg-yellow-600 text-white rounded">Update</button>
-            <button onClick={() => { setEditingId(null); setTitle(""); setUsername(""); setPassword(""); setUrl(""); setNotes(""); }} className="px-4 py-2 bg-gray-200 rounded">Cancel</button>
+            <button onClick={() => { setEditingId(null); setTitle(""); setUsername(""); setPassword(""); setUrl(""); setNotes(""); }} className="px-4 py-2 bg-red-500 rounded">Cancel</button>
           </div>
         ) : (
           <button onClick={addVaultItem} className="px-4 py-2 bg-green-600 text-white rounded">Save</button>
