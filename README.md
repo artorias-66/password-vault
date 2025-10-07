@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Password Generator + Secure Vault (MVP)
 
-## Getting Started
+Fast minimal password manager. Next.js + MongoDB. Client-side AES encryption so the server and DB only see encrypted blobs.
 
-First, run the development server:
+### 1) Prerequisites
+- Node 18+ (LTS)
+- MongoDB connection string (Atlas or local)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### 2) Setup
+Create `password-vault/.env.local` beside `package.json`:
+
+```
+MONGODB_URI=mongodb+srv://<user>:<pass>@<cluster>/<db>?retryWrites=true&w=majority
+JWT_SECRET=replace-with-long-random
+NEXT_PUBLIC_CLIENT_SECRET=replace-with-strong-client-key
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Tip (Windows): make sure the file is not saved as `.env.local.txt` and restart `npm run dev` after editing.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### 3) Run locally
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm install
+npm run dev
+# open http://localhost:3000
+```
 
-## Learn More
+Flow to try:
+- Sign up → Log in
+- Generate a password (length, numbers/symbols, exclude look‑alikes) → Save
+- Search, Edit, Delete; Copy auto‑clears in ~15s
 
-To learn more about Next.js, take a look at the following resources:
+### Tech choices
+- Next.js App Router, Tailwind (light/dark theme, no heavy UI kits)
+- MongoDB with Mongoose
+- Auth: email + password (bcrypt) → JWT (localStorage)
+- Crypto: client‑side AES (CryptoJS)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Why CryptoJS? It’s simple, browser‑only and battle‑tested. For production, prefer WebCrypto AES‑GCM with per‑item random IVs and keys derived via PBKDF2/Argon2 for stronger guarantees.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### API surface
+- POST `/api/auth/signup` → create user
+- POST `/api/auth/login` → `{ token }`
+- GET `/api/vault` (Bearer) → list items (encrypted)
+- POST `/api/vault` (Bearer) → create (encrypted fields)
+- PUT `/api/vault` (Bearer) → update by `id`
+- DELETE `/api/vault` (Bearer) → delete by `id`
 
-## Deploy on Vercel
+### Security notes
+- Vault fields are encrypted in the browser; the backend never handles plaintext fields.
+- Avoid logging secrets. Keep `.env.local` out of version control.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Deploy (Vercel)
+1) Push this folder to a Git repo
+2) Import into Vercel (Next.js project)
+3) Add env vars: `MONGODB_URI`, `JWT_SECRET`, `NEXT_PUBLIC_CLIENT_SECRET`
+4) Deploy
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Deliverables checklist
+- Live demo URL (Vercel)
+- Repo link + this README
+- Short note on crypto (see “Tech choices”)
+- 60–90s screen recording: generate → save → search → edit → delete
+
+### Troubleshooting
+- Error “Please define the MONGODB_URI …”: ensure `.env.local` exists in `password-vault/`, names are exact, then fully restart dev server. On Windows, confirm it’s not `.env.local.txt`.
