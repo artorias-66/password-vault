@@ -36,7 +36,8 @@ Flow to try:
 - Auth: email + password (bcrypt) → JWT (localStorage)
 - Crypto: client‑side AES (CryptoJS)
 
-Why CryptoJS? It’s simple, browser‑only and battle‑tested. For production, prefer WebCrypto AES‑GCM with per‑item random IVs and keys derived via PBKDF2/Argon2 for stronger guarantees.
+Short note on crypto (2–3 lines):
+We use CryptoJS AES in the browser so plaintext never leaves the client. It’s lightweight, works without native bindings, and is sufficient for this MVP. For production hardening, switch to WebCrypto AES‑GCM with per‑item random IVs and derive keys per user (PBKDF2/Argon2).
 
 ### API surface
 - POST `/api/auth/signup` → create user
@@ -50,17 +51,7 @@ Why CryptoJS? It’s simple, browser‑only and battle‑tested. For production,
 - Vault fields are encrypted in the browser; the backend never handles plaintext fields.
 - Avoid logging secrets. Keep `.env.local` out of version control.
 
-### Deploy (Vercel)
-1) Push this folder to a Git repo
-2) Import into Vercel (Next.js project)
-3) Add env vars: `MONGODB_URI`, `JWT_SECRET`, `NEXT_PUBLIC_CLIENT_SECRET`
-4) Deploy
-
-### Deliverables checklist
-- Live demo URL (Vercel)
-- Repo link + this README
-- Short note on crypto (see “Tech choices”)
-- 60–90s screen recording: generate → save → search → edit → delete
+### 
 
 ### Troubleshooting
 - Error “Please define the MONGODB_URI …”: ensure `.env.local` exists in `password-vault/`, names are exact, then fully restart dev server. On Windows, confirm it’s not `.env.local.txt`.
